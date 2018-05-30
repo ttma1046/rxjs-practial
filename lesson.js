@@ -1,4 +1,4 @@
-const observable = Rx.Observable.create(observer => {
+/*const observable = Rx.Observable.create(observer => {
     observer.next('hello');
     observer.next('world');
     observer.next('Test');
@@ -58,11 +58,6 @@ hotvtwo.subscribe(a => print(`Cold Subscriber B: ${a}`));
 
 hotvtwo.connect();
 
-function print(val) {
-    let el = document.createElement('p');
-    el.innerText = val;
-    document.body.appendChild(el);
-}
 
 const completion = Rx.Observable.timer(1000);
 
@@ -78,3 +73,186 @@ const subscription = interval.subscribe(x => print(x));
 setTimeout(() => {
     subscription.unsubscribe()
 }, 3000)
+
+
+const numbers = Rx.Observable.of(10, 100, 1000);
+
+numbers
+    .map(num => Math.log(num))
+    .subscribe(x => print(x));
+
+
+const jsonString = '{"type": "Dog", "breed": "Pug"}'
+const apiCall = Rx.Observable.of(jsonString);
+
+apiCall.map(json => JSON.parse(json))
+        .subscribe(obj => {
+            print(obj.type)
+            print(obj.breed)
+        })
+
+
+const names = Rx.Observable.of('Simon', 'Garfunkle');
+
+names
+    .do(name => print(name))
+    .map(name => name.toUpperCase())
+    .do(name => print(name))
+    .subscribe()
+
+
+const filternumbers = Rx.Observable.of(-3, 5, 7, 2, -7, 9, -2);
+
+filternumbers
+    .filter(n => n >= 0)
+    .subscribe(n => print(n))
+
+filternumbers
+    .first()
+    .subscribe(n => print(n))
+
+filternumbers
+    .last()
+    .subscribe(n => print(n))
+
+
+let mouseEvents = Rx.Observable.fromEvent(document, 'mousemove')
+
+mouseEvents
+    .throttleTime(1000)
+    .subscribe(e => print(e.type));
+
+let debounceMouseEvents = Rx.Observable.fromEvent(document, 'mousemove')
+
+debounceMouseEvents
+    .debounceTime(1000)
+    .subscribe(e => print(e.type));
+
+let calclicks = Rx.Observable.fromEvent(document, 'click');
+
+calclicks
+    .map(e => parseInt(Math.random() * 10))
+    .do(score => print(`click scored + ${score}`))
+    .scan((highScore, score) => highScore + score)
+    .subscribe(highScore => print(highScore));
+    */
+
+
+/*let switchMapClicks = Rx.Observable.fromEvent(document, 'click');
+
+switchMapClicks.switchMap(click => {
+    return Rx.Observable.interval(500);
+}).subscribe(i => print(i));
+*/
+/*
+
+// takeUntil
+const interval = Rx.Observable.interval(500);
+const notifier = Rx.Observable.timer(2000);
+
+interval
+    .takeUntil(notifier)
+    .finally(() => print('Complete!'))
+    .subscribe(i => print(i));
+
+// takeWhile
+const names = Rx.Observable.of('Bob', 'Jeff', 'Doug', 'Steve');
+
+names
+    .takeWhile(name => name != 'Doug')
+    .finally(() => print('Complete! I found Doug'))
+    .subscribe(i => print(i));
+
+// zip
+const yin = Rx.Observable.of('peanut butter', 'wine', 'rainbows');
+const yang = Rx.Observable.of('jelly', 'cheese', 'unicorns').delay(2000);
+
+const combo = Rx.Observable.zip(yin, yang);
+combo.subscribe(arr => print(arr));
+
+
+// .forkJoin()
+
+const yinnew = Rx.Observable.of('peanut butter', 'wine', 'rainbows');
+const yangnew = Rx.Observable.of('jelly', 'cheese', 'unicorns').delay(2000);
+
+const combonew = Rx.Observable.forkJoin(yinnew, yangnew);
+
+combonew.subscribe(arr => print(arr));
+*/
+// .catch()
+/*
+const observable = Rx.Observable.create(observer => {
+    observer.next('good');
+    observer.next('great');
+    observer.next('grand');
+
+    // throw 'catch me!';
+
+    observer.next('wonderful');
+})
+
+observable
+    .catch(error => print(`Error caught: ${error}`))
+    .retry(2)
+    .subscribe(val => print(val))
+
+
+
+
+
+const subject = new Rx.Subject();
+
+const subA = subject.subscribe(val => print(`Sub A: ${val}`));
+const subB = subject.subscribe(val => print(`Sub B: ${val}`));
+
+subject.next('Hello');
+
+setTimeout(() => {
+    subject.next('World');
+}, 1000)
+*/
+
+
+
+
+const observable = Rx.Observable.fromEvent(document, 'click');
+const clicks = observable
+                    .do(_ => print('Do One Time!'));
+// clicks.subscribe(() => print('test'));
+
+const subject = clicks.multicast(() => new Rx.Subject);
+
+const subA = subject.subscribe(c => print(`Sub A: ${c.timeStamp}`));
+const subB = subject.subscribe(c => print(`Sub B: ${c.timeStamp}`));
+
+subject.connect();
+
+
+function print(val) {
+    let el = document.createElement('p');
+    el.innerText = val;
+    document.body.appendChild(el);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
